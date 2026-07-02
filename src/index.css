@@ -1,0 +1,445 @@
+/* Bootstrap Imports */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Define Design System Theme Variables */
+:root {
+  /* Common variables */
+  --transition-speed: 0.3s;
+  
+  /* Dark Mode Default Theme variables */
+  --bg-primary: #060a14;
+  --bg-secondary: #0d1525;
+  --bg-tertiary: #162036;
+  --text-primary: #f0f4f8;
+  --text-secondary: #c8d6e5;
+  --text-subtitle: #a8c0d8;
+  --accent-color: #0d9488; /* Teal */
+  --accent-light: #2dd4bf;
+  --accent-glow: rgba(13, 148, 136, 0.2);
+  --border-color: rgba(45, 212, 191, 0.12);
+  --navbar-bg: rgba(6, 10, 20, 0.92);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(13, 21, 37, 0.6);
+  --gradient-start: #0d9488;
+  --gradient-end: #2dd4bf;
+}
+
+[data-theme='light'] {
+  /* Light Mode Theme variables */
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #edf1f7;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-subtitle: #475569;
+  --accent-color: #0f766e;
+  --accent-light: #14b8a6;
+  --accent-glow: rgba(15, 118, 110, 0.12);
+  --border-color: rgba(15, 118, 110, 0.15);
+  --navbar-bg: rgba(245, 247, 250, 0.92);
+  --shadow-color: rgba(0, 0, 0, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --gradient-start: #0f766e;
+  --gradient-end: #14b8a6;
+}
+
+/* Global Font Override to DM Sans */
+* {
+  font-family: 'DM Sans', sans-serif !important;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin-bottom: 0.5em;
+}
+
+p, span, li, input, textarea, button {
+  letter-spacing: 0.015em;
+}
+
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+  transition: color var(--transition-speed);
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* Subtitle shadow class — visible but with a soft glow */
+.subtitle-shadow {
+  color: var(--text-subtitle);
+  text-shadow: 0 1px 8px rgba(45, 212, 191, 0.25), 0 0 2px rgba(45, 212, 191, 0.1);
+  font-weight: 500;
+}
+
+[data-theme='light'] .subtitle-shadow {
+  color: var(--text-subtitle);
+  text-shadow: 0 1px 6px rgba(15, 118, 110, 0.15), 0 0 2px rgba(15, 118, 110, 0.08);
+}
+
+/* Layout Utilities */
+section {
+  padding: 80px 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 50px 0;
+  }
+}
+
+.section-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 50px;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 576px) {
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 35px;
+  }
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  border-radius: 2px;
+}
+
+/* Custom UI Elements - Cards */
+.card-custom {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
+  box-shadow: 0 4px 24px var(--shadow-color);
+  overflow: hidden;
+}
+
+.card-custom:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--accent-light);
+  box-shadow: 0 12px 40px var(--accent-glow), 0 6px 20px var(--shadow-color);
+  z-index: 10;
+}
+
+/* Auto-height cards (default); force equal height only when needed */
+.card-equal-height {
+  height: 100%;
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  color: #ffffff !important;
+  border: none;
+  font-weight: 600;
+  padding: 11px 26px;
+  border-radius: 8px;
+  transition: transform var(--transition-speed), opacity var(--transition-speed), box-shadow var(--transition-speed);
+  letter-spacing: 0.02em;
+}
+
+.btn-accent:hover {
+  opacity: 0.95;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+.btn-outline-accent {
+  border: 2px solid var(--accent-light);
+  color: var(--accent-light) !important;
+  background: transparent;
+  font-weight: 600;
+  padding: 9px 24px;
+  border-radius: 8px;
+  transition: all var(--transition-speed);
+}
+
+.btn-outline-accent:hover {
+  background: var(--accent-light);
+  color: #ffffff !important;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+/* Badges */
+.badge-custom {
+  background-color: var(--bg-tertiary);
+  color: var(--accent-light);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  display: inline-block;
+  margin: 4px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* Glowing text and objects for AI aesthetics */
+.glow-text {
+  text-shadow: 0 0 15px var(--accent-glow), 0 0 40px rgba(13, 148, 136, 0.08);
+}
+
+.glow-box {
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+/* Background Gradients */
+.bg-gradient-mesh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.07;
+  background-image: 
+    radial-gradient(ellipse at 20% 20%, var(--accent-light) 0px, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, var(--accent-color) 0px, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(45, 212, 191, 0.3) 0px, transparent 40%);
+}
+
+/* Animated dot grid — subtle futuristic pattern */
+.bg-gradient-mesh::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(45, 212, 191, 0.07) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Timeline Layout for Education */
+.timeline {
+  border-left: 2px solid var(--border-color);
+  padding-left: 20px;
+  position: relative;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -27px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--accent-light);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Sticky Navbar Styling */
+.navbar-custom {
+  background-color: var(--navbar-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 0;
+  transition: padding var(--transition-speed), background-color var(--transition-speed);
+}
+
+.navbar-custom.scrolled {
+  padding: 6px 0;
+  background-color: var(--navbar-bg);
+}
+
+.navbar-custom .nav-link {
+  color: var(--text-primary) !important;
+  font-weight: 500;
+  margin: 0 6px;
+  font-size: 0.85rem;
+  position: relative;
+  transition: color var(--transition-speed);
+}
+
+@media (max-width: 991px) {
+  .navbar-custom .nav-link {
+    margin: 4px 0;
+    font-size: 0.95rem;
+    padding: 8px 12px !important;
+  }
+}
+
+.navbar-custom .nav-link:hover, 
+.navbar-custom .nav-link.active {
+  color: var(--accent-light) !important;
+}
+
+.navbar-custom .nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  transition: width var(--transition-speed);
+}
+
+.navbar-custom .nav-link:hover::after,
+.navbar-custom .nav-link.active::after {
+  width: 100%;
+}
+
+/* Navbar logo image */
+.navbar-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-light);
+  margin-right: 10px;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Profile photo container in Hero */
+.profile-container {
+  width: 280px;
+  height: 280px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 3px solid var(--accent-light);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), 0 0 30px var(--accent-glow);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.profile-container:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4), 0 0 50px var(--accent-glow);
+}
+
+@media (max-width: 991px) {
+  .profile-container {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-container {
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+  }
+}
+
+/* Mobile responsiveness helpers */
+@media (max-width: 576px) {
+  .display-4 {
+    font-size: 2rem !important;
+  }
+  
+  .h4 {
+    font-size: 1.1rem !important;
+  }
+  
+  .lead {
+    font-size: 0.95rem !important;
+  }
+  
+  .btn-accent, .btn-outline-accent {
+    padding: 9px 18px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animated gradient border for special sections */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end), var(--gradient-start));
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* WhatsApp floating button responsive */
+@media (max-width: 576px) {
+  .whatsapp-float {
+    width: 48px !important;
+    height: 48px !important;
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+}
