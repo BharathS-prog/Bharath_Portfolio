@@ -434,6 +434,11 @@ html {
   100% { background-position: -200% 0; }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* WhatsApp floating button responsive */
 @media (max-width: 576px) {
   .whatsapp-float {

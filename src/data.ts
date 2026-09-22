@@ -6,6 +6,7 @@ export interface ProfileInfo {
   email: string;
   linkedIn: string;
   linkedInUrl: string;
+  githubUrl: string;
   whatsAppUrl: string;
   resumeUrl: string;
   profilePhotoUrl: string;
@@ -48,6 +49,7 @@ export interface Internship {
 export interface CertificateFile {
   label: string;
   url: string;
+  isImage?: boolean;
 }
 
 export interface Certification {
@@ -71,8 +73,9 @@ export const profileInfo: ProfileInfo = {
   email: "vells0659@gmail.com",
   linkedIn: "linkedin.com/in/s-bharath",
   linkedInUrl: "https://www.linkedin.com/in/s-bharath",
+  githubUrl: "https://github.com/BharathS-prog",
   whatsAppUrl: "https://wa.me/916379639596?text=Hi%20Bharath,%20I%20viewed%20your%20portfolio%20and%20would%20like%20to%20connect!",
-  resumeUrl: "https://docs.google.com/document/d/1WRlwH9Lq2GtiCP9-N8HfyF2MpAe-EotD/export?format=docx",
+  resumeUrl: "/assets/resume-bharath.pdf",
   profilePhotoUrl: "/assets/profile.jpg",
   bio: "Highly motivated B.Tech Artificial Intelligence and Data Science student with a strong academic foundation and hands-on project experience in Machine Learning, Deep Learning, and Generative AI. Skilled in developing intelligent applications, proctoring systems, and real-time translators. Eager to contribute to cutting-edge LLM operations, pipeline development, and intelligent agent systems."
 };
@@ -171,8 +174,8 @@ export const certifications: Certification[] = [
     provider: "IBM SkillsBuild",
     details: "Acquired certifications in foundational Artificial Intelligence concepts, Prompt Engineering techniques, and ethical AI development guidelines.",
     certificateUrls: [
-      { label: "Certificate 1", url: "https://drive.google.com/uc?export=download&id=1ZbzKbnqX2YKGXBQmP8W9wcDxi6L0s3Hd" },
-      { label: "Certificate 2", url: "https://drive.google.com/uc?export=download&id=1V6k27XUaDGArR6_j7kX2xilPVo3J50VP" }
+      { label: "Intro to Generative AI", url: "/assets/cert-intro-gen-ai.pdf" },
+      { label: "Intro to AI", url: "/assets/cert-intro-ai.pdf" }
     ]
   },
   {
@@ -180,8 +183,8 @@ export const certifications: Certification[] = [
     provider: "Gen AI Networks",
     details: "Learned data modeling, DAX queries, and dashboard design. Built comprehensive analytical reports for business intelligence workflows.",
     certificateUrls: [
-      { label: "Certificate 1", url: "https://drive.google.com/uc?export=download&id=10PceLwgTQolKAfFkqGs6FAAf3uSU7Yfo" },
-      { label: "Certificate 2", url: "https://drive.google.com/uc?export=download&id=1ryr_U-3_zTE6g-ZYoAXL5FcR7XLUBK99" }
+      { label: "Power BI for Data Analytics - Part 1", url: "https://drive.google.com/uc?export=download&id=10PceLwgTQolKAfFkqGs6FAAf3uSU7Yfo" },
+      { label: "Power BI for Data Analytics - Part 2", url: "https://drive.google.com/uc?export=download&id=1ryr_U-3_zTE6g-ZYoAXL5FcR7XLUBK99" }
     ]
   },
   {
@@ -189,7 +192,7 @@ export const certifications: Certification[] = [
     provider: "CSC (Computer Software College)",
     details: "Completed standard curriculum covering office automation tools, database essentials, and basic programming concepts.",
     certificateUrls: [
-      { label: "Certificate", url: "https://drive.google.com/uc?export=download&id=16-AYxEHP8omClw1ZIHeOUn1FIW6wSenE" }
+      { label: "Higher Diploma in Computer Applications", url: "https://drive.google.com/uc?export=download&id=16-AYxEHP8omClw1ZIHeOUn1FIW6wSenE" }
     ]
   }
 ];

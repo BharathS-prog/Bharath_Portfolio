@@ -103,8 +103,7 @@ export const Hero: React.FC = () => {
                 <a 
                   href={profileInfo.resumeUrl} 
                   className="btn btn-accent d-inline-flex align-items-center gap-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download="Bharath_S_Resume.pdf"
                 >
                   <Download size={18} />
                   <span>Download Resume</span>

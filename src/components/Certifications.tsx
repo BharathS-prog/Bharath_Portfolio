@@ -84,8 +84,7 @@ export const Certifications: React.FC = () => {
                             <a
                               key={fileIdx}
                               href={file.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                              download
                               className="btn btn-sm btn-outline-accent d-inline-flex align-items-center gap-1"
                               style={{ fontSize: '0.8rem', padding: '4px 12px' }}
                             >
@@ -107,4 +106,5 @@ export const Certifications: React.FC = () => {
   );
 };
 export default Certifications;
+
 
