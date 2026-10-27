@@ -1,117 +1,197 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ExternalLink, Code } from 'lucide-react';
-import { projectList } from '../data';
-
-// Inline SVG matching Lucide Github icon styling
-const GithubIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-);
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ExternalLink, Lightbulb, CheckCircle2 } from 'lucide-react';
+import { projectList, type ProjectStatus } from '../data';
+import { GithubIcon } from './Icons';
 
 export const Projects: React.FC = () => {
+  const [filter, setFilter] = useState<string>('All');
+
+  const filterOptions = ['All', 'In Development', 'Prototype', 'Research / Exploration'];
+
+  const filteredProjects = filter === 'All' 
+    ? projectList 
+    : projectList.filter((p) => p.status === filter);
+
+  const getStatusBadgeClass = (status: ProjectStatus) => {
+    switch (status) {
+      case 'In Development':
+        return 'status-in-dev';
+      case 'Prototype':
+        return 'status-prototype';
+      case 'Research / Exploration':
+        return 'status-research';
+      default:
+        return 'status-completed';
+    }
+  };
+
   return (
     <section id="projects" className="position-relative">
       <div className="container">
-        {/* Title */}
-        <div className="row">
-          <div className="col-12">
-            <h2 className="section-title">Featured Projects</h2>
+        {/* Section Header */}
+        <div className="row align-items-end justify-content-between g-4 mb-4">
+          <div className="col-lg-7 text-center text-lg-start">
+            <span className="section-label">// 02 &bull; Engineering &amp; AI Builds</span>
+            <h2 className="section-heading">Featured Projects</h2>
+            <p className="section-subheading">
+              Practical applications, machine learning prototypes, and software tools built to solve real challenges.
+            </p>
+          </div>
+
+          {/* Filter Pills */}
+          <div className="col-lg-5 d-flex flex-wrap justify-content-center justify-content-lg-end gap-2">
+            {filterOptions.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setFilter(opt)}
+                className={`btn btn-sm ${
+                  filter === opt ? 'btn-futuristic-primary' : 'btn-futuristic-secondary'
+                }`}
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '0.82rem',
+                  borderRadius: '100px',
+                  fontWeight: 600,
+                }}
+              >
+                {opt}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Projects Grid */}
-        <div className="row g-4">
-          {projectList.map((project, index) => (
-            <div key={index} className="col-md-6 col-lg-4">
+        <motion.div layout className="row g-4">
+          <AnimatePresence>
+            {filteredProjects.map((project, index) => (
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                className="card-custom d-flex flex-column"
+                key={project.title}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="col-lg-6"
               >
-                {/* Visual Accent */}
-                <div 
-                  style={{ 
-                    height: '4px', 
-                    background: 'linear-gradient(90deg, var(--accent-color), var(--accent-light))' 
-                  }}
-                />
-
-                <div className="card-body p-4 d-flex flex-column h-100 justify-content-between">
+                <div className="card-futuristic d-flex flex-column justify-content-between p-4 p-md-5">
                   <div>
-                    {/* Header Icon & Title */}
-                    <div className="d-flex align-items-center gap-2 mb-3">
-                      <Code size={20} style={{ color: 'var(--accent-light)' }} />
+                    {/* Header: Title and Status Badge */}
+                    <div className="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
                       <h3 className="h5 fw-bold m-0" style={{ color: 'var(--text-primary)' }}>
                         {project.title}
                       </h3>
+                      <span className={`status-pill ${getStatusBadgeClass(project.status)}`}>
+                        <span className="pulsing-dot"></span>
+                        <span>{project.status}</span>
+                      </span>
+                    </div>
+
+                    {/* The Problem Box */}
+                    <div
+                      className="p-3 rounded-3 mb-3"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid var(--border-subtle)',
+                      }}
+                    >
+                      <div className="d-flex align-items-center gap-2 mb-1">
+                        <Lightbulb size={15} style={{ color: 'var(--accent-cyan)' }} />
+                        <span
+                          className="font-monospace text-uppercase"
+                          style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--accent-cyan)' }}
+                        >
+                          The Problem It Solves
+                        </span>
+                      </div>
+                      <p className="small mb-0" style={{ color: 'var(--text-secondary)' }}>
+                        {project.problem}
+                      </p>
                     </div>
 
                     {/* Description */}
-                    <p className="text-secondary mb-4" style={{ fontSize: '0.95rem', textAlign: 'justify' }}>
+                    <p className="mb-4" style={{ fontSize: '0.96rem', lineHeight: '1.65' }}>
                       {project.description}
                     </p>
+
+                    {/* Key Technical Learning */}
+                    <div className="mb-4">
+                      <div className="d-flex align-items-center gap-2 mb-1">
+                        <CheckCircle2 size={15} style={{ color: 'var(--accent-emerald)' }} />
+                        <span
+                          className="font-monospace text-uppercase"
+                          style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--text-muted)' }}
+                        >
+                          What I Learned &amp; Built
+                        </span>
+                      </div>
+                      <p className="small mb-0" style={{ color: 'var(--text-secondary)' }}>
+                        {project.keyLearnings}
+                      </p>
+                    </div>
                   </div>
 
                   <div>
-                    {/* Tech Stack Tags */}
+                    {/* Tech Stack Badges */}
                     <div className="d-flex flex-wrap gap-1 mb-4">
-                      {project.techStack.map((tech, techIndex) => (
-                        <span key={techIndex} className="badge-custom m-0">
+                      {project.techStack.map((tech) => (
+                        <span key={tech} className="tech-tag">
                           {tech}
                         </span>
                       ))}
                     </div>
 
-                    {/* Action Links */}
-                    <div className="d-flex gap-3 border-top pt-3" style={{ borderColor: 'var(--border-color) !important' }}>
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="d-inline-flex align-items-center gap-1 small text-decoration-none fw-semibold"
-                          style={{ color: 'var(--accent-light)' }}
-                        >
-                          <GithubIcon size={16} />
-                          <span>Code Repo</span>
-                        </a>
-                      )}
-                      {project.demoUrl && (
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="d-inline-flex align-items-center gap-1 small text-decoration-none fw-semibold"
-                          style={{ color: 'var(--text-primary)' }}
-                        >
-                          <ExternalLink size={16} />
-                          <span>Live Demo</span>
-                        </a>
-                      )}
+                    {/* Links & Repository */}
+                    <div
+                      className="d-flex align-items-center justify-content-between pt-3 border-top"
+                      style={{ borderColor: 'var(--border-subtle) !important' }}
+                    >
+                      <div className="d-flex align-items-center gap-3">
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="d-inline-flex align-items-center gap-2 small fw-semibold"
+                            style={{ color: 'var(--accent-cyan-bright)' }}
+                          >
+                            <GithubIcon size={16} />
+                            <span>Source Code</span>
+                          </a>
+                        )}
+
+                        {project.demoUrl ? (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="d-inline-flex align-items-center gap-2 small fw-semibold"
+                            style={{ color: 'var(--text-primary)' }}
+                          >
+                            <ExternalLink size={16} />
+                            <span>Live Demo</span>
+                          </a>
+                        ) : (
+                          <span className="small text-muted font-monospace" style={{ fontSize: '0.78rem' }}>
+                            Local Prototype / Repo Active
+                          </span>
+                        )}
+                      </div>
+
+                      <span className="small text-muted font-monospace d-none d-sm-inline" style={{ fontSize: '0.75rem' }}>
+                        Verified Project
+                      </span>
                     </div>
                   </div>
                 </div>
               </motion.div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );
 };
+
 export default Projects;

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, MessageSquare, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, MessageSquare, CheckCircle2, Sparkles, MapPin } from 'lucide-react';
 import { profileInfo } from '../data';
 
-// Inline SVG matching Lucide Linkedin icon styling
-const LinkedinIcon: React.FC<{ size?: number }> = ({ size = 22 }) => (
+// Custom LinkedIn Icon
+const LinkedinIcon: React.FC<{ size?: number }> = ({ size = 20 }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width={size} 
@@ -22,8 +22,8 @@ const LinkedinIcon: React.FC<{ size?: number }> = ({ size = 22 }) => (
   </svg>
 );
 
-// Inline SVG for GitHub icon
-const GithubIcon: React.FC<{ size?: number }> = ({ size = 22 }) => (
+// Custom GitHub Icon
+const GithubIcon: React.FC<{ size?: number }> = ({ size = 20 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -40,281 +40,452 @@ const GithubIcon: React.FC<{ size?: number }> = ({ size = 22 }) => (
   </svg>
 );
 
-export const Contact: React.FC = () => {
+interface ContactProps {
+  initialReason?: string;
+}
+
+export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    reason: initialReason || 'Startup Mentorship',
+    problemToSolve: '',
+    proposedIdea: '',
     message: ''
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [submissionFeedback, setSubmissionFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (initialReason) {
+      setFormData((prev) => ({ ...prev, reason: initialReason }));
+    }
+  }, [initialReason]);
+
+  const reasonsList = [
+    'Startup Mentorship',
+    'Startup Idea or Feedback',
+    'Collaboration',
+    'Internship Opportunity',
+    'Job Opportunity',
+    'AI Project Discussion',
+    'Other'
+  ];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const validateForm = () => {
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      alert("Please fill in all fields before sending.");
-      return false;
+    if (formErrors[name]) {
+      setFormErrors((prev) => ({ ...prev, [name]: '' }));
     }
-    return true;
   };
 
-  const handleWhatsAppSubmit = () => {
-    if (!validateForm()) return;
-
-    // Compose WhatsApp message from form fields
-    const whatsappMessage = encodeURIComponent(
-      `Hi Bharath! My name is ${formData.name}.\n\n` +
-      `Email: ${formData.email}\n` +
-      `Subject: ${formData.subject}\n\n` +
-      `Message:\n${formData.message}`
-    );
-    const whatsappUrl = `https://wa.me/916379639596?text=${whatsappMessage}`;
-
-    window.open(whatsappUrl, '_blank');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+  const validate = () => {
+    const errors: { [key: string]: string } = {};
+    if (!formData.name.trim()) errors.name = 'Please provide your name.';
+    if (!formData.email.trim()) {
+      errors.email = 'Please provide an email address.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please enter a valid email address.';
+    }
+    if (!formData.message.trim()) errors.message = 'Please include a message or inquiry.';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  const handleEmailSubmit = () => {
-    if (!validateForm()) return;
+  const isStartupRelated = formData.reason === 'Startup Mentorship' || formData.reason === 'Startup Idea or Feedback' || formData.reason === 'Collaboration';
 
-    // Compose Email message from form fields
-    const emailSubject = encodeURIComponent(`${formData.subject} - from ${formData.name}`);
-    const emailBody = encodeURIComponent(
+  const buildPayloadText = () => {
+    let payload = `Name: ${formData.name}\nEmail: ${formData.email}\nReason: ${formData.reason}\n`;
+    if (formData.problemToSolve.trim()) {
+      payload += `Problem to Solve: ${formData.problemToSolve}\n`;
+    }
+    if (formData.proposedIdea.trim()) {
+      payload += `Proposed Idea / Angle: ${formData.proposedIdea}\n`;
+    }
+    payload += `\nMessage:\n${formData.message}\n`;
+    return payload;
+  };
+
+  const handleSendViaEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    const subject = encodeURIComponent(`[Portfolio Inquiry] ${formData.reason} from ${formData.name}`);
+    const body = encodeURIComponent(
       `Hi Bharath,\n\n` +
-      `${formData.message}\n\n` +
-      `---\n` +
-      `Sender: ${formData.name}\n` +
-      `Email: ${formData.email}`
+      `I am reaching out regarding: ${formData.reason}.\n\n` +
+      buildPayloadText() +
+      `\n---\nSent via Bharath's Portfolio Contact Form`
     );
-    const mailtoUrl = `mailto:${profileInfo.email}?subject=${emailSubject}&body=${emailBody}`;
 
-    window.open(mailtoUrl, '_self');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    const mailtoUrl = `mailto:${profileInfo.email}?subject=${subject}&body=${body}`;
+
+    setTimeout(() => {
+      window.location.href = mailtoUrl;
+      setIsSubmitting(false);
+      setSubmissionFeedback({
+        type: 'success',
+        message: 'Opening your default email client with your formatted message. If it did not open automatically, you can email directly at ' + profileInfo.email
+      });
+    }, 400);
+  };
+
+  const handleSendViaWhatsApp = () => {
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    const message = encodeURIComponent(
+      `*New Portfolio Inquiry*\n\n` +
+      `*Name:* ${formData.name}\n` +
+      `*Email:* ${formData.email}\n` +
+      `*Topic:* ${formData.reason}\n` +
+      (formData.problemToSolve ? `*Problem Context:* ${formData.problemToSolve}\n` : '') +
+      (formData.proposedIdea ? `*Collaboration Angle:* ${formData.proposedIdea}\n` : '') +
+      `\n*Message:*\n${formData.message}`
+    );
+
+    const waUrl = `https://wa.me/916379639596?text=${message}`;
+
+    setTimeout(() => {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      setIsSubmitting(false);
+      setSubmissionFeedback({
+        type: 'success',
+        message: 'Redirecting to WhatsApp with your pre-filled inquiry. Thank you!'
+      });
+    }, 400);
   };
 
   return (
     <section id="contact" className="position-relative">
       <div className="container">
-        {/* Title */}
-        <div className="row">
-          <div className="col-12">
-            <h2 className="section-title">Get In Touch</h2>
-          </div>
+        {/* Section Header */}
+        <div className="section-heading-wrapper text-center text-md-start">
+          <span className="section-label">// 07 &bull; Direct Connection</span>
+          <h2 className="section-heading">Let's Connect &amp; Collaborate</h2>
+          <p className="section-subheading">
+            Whether you want to share mentorship advice, explore early-stage startup ideas, discuss internship opportunities, or build AI projects together.
+          </p>
         </div>
 
         <div className="row g-5">
-          {/* Left Column - Contact Details */}
+          {/* Direct Communication Channels */}
           <div className="col-lg-5">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6 }}
-              className="d-flex flex-column gap-4"
+              className="d-flex flex-column gap-3"
             >
-              <div>
-                <h3 className="h4 mb-3" style={{ color: 'var(--text-primary)' }}>
-                  Let's Connect
+              <div className="card-futuristic p-4">
+                <span className="section-label mb-2">// Direct Channels</span>
+                <h3 className="h5 fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+                  Verified Contact Information
                 </h3>
-                <p style={{ fontSize: '1rem', textAlign: 'justify', color: 'var(--text-secondary)' }}>
-                  Whether you're looking to build an intelligent conversational agent, set up an 
-                  ML pipeline, or just want to chat about AI applications in tech, feel free to reach out.
+                <p className="small mb-4" style={{ lineHeight: '1.6' }}>
+                  I respond promptly to emails, LinkedIn messages, and WhatsApp conversations. Feel free to reach out directly through any of the channels below.
                 </p>
-              </div>
 
-              {/* Actionable List */}
-              <div className="d-flex flex-column gap-3">
-                <a
-                  href={profileInfo.whatsAppUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card-custom p-3 d-flex align-items-center gap-3 text-decoration-none"
-                >
-                  <div className="p-2 bg-success bg-opacity-25 rounded text-success">
-                    <MessageSquare size={22} />
-                  </div>
-                  <div>
-                    <div className="subtitle-shadow small fw-semibold">WhatsApp & Phone</div>
-                    <div className="fw-bold" style={{ color: 'var(--text-primary)' }}>{profileInfo.phone}</div>
-                  </div>
-                </a>
+                <div className="d-flex flex-column gap-2">
+                  <a
+                    href={`mailto:${profileInfo.email}`}
+                    className="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid var(--border-subtle)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                      style={{ width: '40px', height: '40px', background: 'rgba(6, 182, 212, 0.1)', color: 'var(--accent-cyan)' }}
+                    >
+                      <Mail size={18} />
+                    </div>
+                    <div className="overflow-hidden">
+                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>DIRECT EMAIL</div>
+                      <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
+                        {profileInfo.email}
+                      </div>
+                    </div>
+                  </a>
 
-                <a
-                  href={`mailto:${profileInfo.email}`}
-                  className="card-custom p-3 d-flex align-items-center gap-3 text-decoration-none"
-                >
-                  <div className="p-2 bg-info bg-opacity-25 rounded text-info">
-                    <Mail size={22} />
-                  </div>
-                  <div>
-                    <div className="subtitle-shadow small fw-semibold">Email Address</div>
-                    <div className="fw-bold" style={{ color: 'var(--text-primary)' }}>{profileInfo.email}</div>
-                  </div>
-                </a>
+                  <a
+                    href={profileInfo.whatsAppUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid var(--border-subtle)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                      style={{ width: '40px', height: '40px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-emerald)' }}
+                    >
+                      <MessageSquare size={18} />
+                    </div>
+                    <div className="overflow-hidden">
+                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>PHONE / WHATSAPP</div>
+                      <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
+                        {profileInfo.phone}
+                      </div>
+                    </div>
+                  </a>
 
-                <a
-                  href={profileInfo.linkedInUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card-custom p-3 d-flex align-items-center gap-3 text-decoration-none"
-                >
-                  <div className="p-2 bg-primary bg-opacity-25 rounded text-primary">
-                    <LinkedinIcon size={22} />
-                  </div>
-                  <div>
-                    <div className="subtitle-shadow small fw-semibold">LinkedIn Profile</div>
-                    <div className="fw-bold" style={{ color: 'var(--text-primary)' }}>{profileInfo.linkedIn}</div>
-                  </div>
-                </a>
+                  <a
+                    href={profileInfo.linkedInUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid var(--border-subtle)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                      style={{ width: '40px', height: '40px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-blue)' }}
+                    >
+                      <LinkedinIcon size={18} />
+                    </div>
+                    <div className="overflow-hidden">
+                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>LINKEDIN PROFILE</div>
+                      <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
+                        {profileInfo.linkedIn}
+                      </div>
+                    </div>
+                  </a>
 
-                <a
-                  href={profileInfo.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card-custom p-3 d-flex align-items-center gap-3 text-decoration-none"
-                >
-                  <div className="p-2 rounded" style={{ backgroundColor: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa' }}>
-                    <GithubIcon size={22} />
-                  </div>
-                  <div>
-                    <div className="subtitle-shadow small fw-semibold">GitHub Profile</div>
-                    <div className="fw-bold" style={{ color: 'var(--text-primary)' }}>github.com/BharathS-prog</div>
-                  </div>
-                </a>
-              </div>
+                  <a
+                    href={profileInfo.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-3 d-flex align-items-center gap-3 text-decoration-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid var(--border-subtle)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                      style={{ width: '40px', height: '40px', background: 'rgba(139, 92, 246, 0.1)', color: 'var(--accent-violet)' }}
+                    >
+                      <GithubIcon size={18} />
+                    </div>
+                    <div className="overflow-hidden">
+                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>GITHUB REPOSITORIES</div>
+                      <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
+                        {profileInfo.github}
+                      </div>
+                    </div>
+                  </a>
+                </div>
 
-              {/* Extra Download Resume Button */}
-              <div className="mt-2">
-                <a
-                  href={profileInfo.resumeUrl}
-                  download="Bharath_S_Resume.pdf"
-                  className="btn btn-outline-accent d-inline-flex align-items-center gap-2"
-                >
-                  <Download size={18} />
-                  <span>Download My Resume</span>
-                </a>
+                <div className="d-flex align-items-center gap-2 mt-4 pt-3 border-top" style={{ borderColor: 'var(--border-subtle) !important' }}>
+                  <MapPin size={16} style={{ color: 'var(--accent-cyan)' }} />
+                  <span className="small text-muted">{profileInfo.location}</span>
+                </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Right Column - Contact Form (sends to WhatsApp) */}
+          {/* Structured Contact / Idea Submission Form */}
           <div className="col-lg-7">
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 24 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6 }}
-              className="card-custom p-4 gradient-border"
+              className="card-futuristic p-4 p-md-5"
             >
-              <h3 className="h5 mb-2 fw-bold" style={{ color: 'var(--accent-light)' }}>
-                Send A Message
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <span className="section-label mb-0">// Structured Inquiry</span>
+                <span className="small text-muted font-monospace" style={{ fontSize: '0.74rem' }}>Direct Email &amp; WhatsApp Integration</span>
+              </div>
+
+              <h3 className="h5 fw-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+                Send A Message or Pitch an Idea
               </h3>
-              <p className="small mb-4" style={{ color: 'var(--text-secondary)' }}>
-                Your message will be sent directly to my WhatsApp or Email.
+              <p className="small text-muted mb-4">
+                Submissions automatically format a complete inquiry package that you can send directly via pre-filled email or instant WhatsApp.
               </p>
 
-              <form className="d-flex flex-column gap-3">
-                <div className="row g-3">
+              <form onSubmit={handleSendViaEmail} noValidate>
+                <div className="row g-3 mb-3">
                   <div className="col-md-6">
-                    <label htmlFor="name" className="form-label small fw-semibold" style={{ color: 'var(--text-secondary)' }}>Your Name</label>
+                    <label htmlFor="contact-name" className="form-label-futuristic">
+                      Your Full Name <span className="text-danger">*</span>
+                    </label>
                     <input
                       type="text"
-                      id="name"
+                      id="contact-name"
                       name="name"
-                      className="form-control"
-                      placeholder="John Doe"
-                      required
                       value={formData.name}
                       onChange={handleInputChange}
-                      style={{
-                        backgroundColor: 'var(--bg-tertiary)',
-                        color: 'var(--text-primary)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '8px'
-                      }}
+                      placeholder="Jane Doe"
+                      className={`form-control form-input-futuristic ${formErrors.name ? 'is-invalid border-danger' : ''}`}
                     />
+                    {formErrors.name && (
+                      <div className="small text-danger mt-1">{formErrors.name}</div>
+                    )}
                   </div>
+
                   <div className="col-md-6">
-                    <label htmlFor="email" className="form-label small fw-semibold" style={{ color: 'var(--text-secondary)' }}>Your Email</label>
+                    <label htmlFor="contact-email" className="form-label-futuristic">
+                      Your Email Address <span className="text-danger">*</span>
+                    </label>
                     <input
                       type="email"
-                      id="email"
+                      id="contact-email"
                       name="email"
-                      className="form-control"
-                      placeholder="john@example.com"
-                      required
                       value={formData.email}
                       onChange={handleInputChange}
-                      style={{
-                        backgroundColor: 'var(--bg-tertiary)',
-                        color: 'var(--text-primary)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '8px'
-                      }}
+                      placeholder="jane@company.com"
+                      className={`form-control form-input-futuristic ${formErrors.email ? 'is-invalid border-danger' : ''}`}
                     />
+                    {formErrors.email && (
+                      <div className="small text-danger mt-1">{formErrors.email}</div>
+                    )}
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="subject" className="form-label small fw-semibold" style={{ color: 'var(--text-secondary)' }}>Subject</label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    className="form-control"
-                    placeholder="Project inquiry"
-                    required
-                    value={formData.subject}
+                <div className="mb-3">
+                  <label htmlFor="contact-reason" className="form-label-futuristic">
+                    Reason for Contacting <span className="text-danger">*</span>
+                  </label>
+                  <select
+                    id="contact-reason"
+                    name="reason"
+                    value={formData.reason}
                     onChange={handleInputChange}
-                    style={{
-                      backgroundColor: 'var(--bg-tertiary)',
-                      color: 'var(--text-primary)',
-                      border: '1px solid var(--border-color)',
-                      borderRadius: '8px'
-                    }}
-                  />
+                    className="form-select form-input-futuristic"
+                  >
+                    {reasonsList.map((reason) => (
+                      <option key={reason} value={reason} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
+                        {reason}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                <div>
-                  <label htmlFor="message" className="form-label small fw-semibold" style={{ color: 'var(--text-secondary)' }}>Message</label>
+                {/* Optional Startup & Idea Specific Context Fields */}
+                <AnimatePresence>
+                  {isStartupRelated && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-3 rounded-3 mb-3" style={{ background: 'rgba(6, 182, 212, 0.04)', border: '1px dashed rgba(6, 182, 212, 0.3)' }}>
+                        <div className="d-flex align-items-center gap-2 mb-2">
+                          <Sparkles size={14} style={{ color: 'var(--accent-cyan)' }} />
+                          <span className="font-monospace small fw-bold text-uppercase" style={{ color: 'var(--accent-cyan)' }}>
+                            Startup &amp; Collaboration Details (Optional)
+                          </span>
+                        </div>
+
+                        <div className="mb-2">
+                          <label htmlFor="problem-to-solve" className="form-label-futuristic" style={{ fontSize: '0.76rem' }}>
+                            What problem are you looking to solve?
+                          </label>
+                          <input
+                            type="text"
+                            id="problem-to-solve"
+                            name="problemToSolve"
+                            value={formData.problemToSolve}
+                            onChange={handleInputChange}
+                            placeholder="e.g., Automating document review, computer vision safety, etc."
+                            className="form-control form-input-futuristic"
+                            style={{ fontSize: '0.86rem' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="proposed-idea" className="form-label-futuristic" style={{ fontSize: '0.76rem' }}>
+                            Proposed Idea, Experience or Collaboration Angle
+                          </label>
+                          <input
+                            type="text"
+                            id="proposed-idea"
+                            name="proposedIdea"
+                            value={formData.proposedIdea}
+                            onChange={handleInputChange}
+                            placeholder="e.g., Technical co-builder, advisor, providing dataset access"
+                            className="form-control form-input-futuristic"
+                            style={{ fontSize: '0.86rem' }}
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="mb-4">
+                  <label htmlFor="contact-message" className="form-label-futuristic">
+                    Your Message <span className="text-danger">*</span>
+                  </label>
                   <textarea
-                    id="message"
+                    id="contact-message"
                     name="message"
                     rows={4}
-                    className="form-control"
-                    placeholder="Write your message here..."
-                    required
                     value={formData.message}
                     onChange={handleInputChange}
-                    style={{
-                      backgroundColor: 'var(--bg-tertiary)',
-                      color: 'var(--text-primary)',
-                      border: '1px solid var(--border-color)',
-                      borderRadius: '8px',
-                      resize: 'none'
-                    }}
+                    placeholder="Share what you have in mind..."
+                    className={`form-control form-input-futuristic ${formErrors.message ? 'is-invalid border-danger' : ''}`}
+                    style={{ resize: 'vertical', minHeight: '110px' }}
                   />
+                  {formErrors.message && (
+                    <div className="small text-danger mt-1">{formErrors.message}</div>
+                  )}
                 </div>
 
-                <div className="d-flex flex-wrap gap-3 mt-2">
+                {/* Feedback Alert */}
+                {submissionFeedback && (
+                  <div
+                    className={`alert ${submissionFeedback.type === 'success' ? 'alert-info' : 'alert-danger'} d-flex align-items-start gap-2 mb-3`}
+                    style={{
+                      background: submissionFeedback.type === 'success' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                      border: `1px solid ${submissionFeedback.type === 'success' ? 'var(--accent-cyan)' : '#ef4444'}`,
+                      color: 'var(--text-primary)',
+                      fontSize: '0.88rem'
+                    }}
+                  >
+                    <CheckCircle2 size={18} className="flex-shrink-0 mt-1" style={{ color: 'var(--accent-cyan)' }} />
+                    <div>{submissionFeedback.message}</div>
+                  </div>
+                )}
+
+                {/* Dual Action Buttons */}
+                <div className="d-flex flex-column flex-sm-row gap-3">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn-futuristic btn-futuristic-primary flex-grow-1"
+                  >
+                    <Mail size={16} />
+                    <span>Send via Email Client</span>
+                  </button>
+
                   <button
                     type="button"
-                    onClick={handleWhatsAppSubmit}
-                    className="btn btn-accent flex-grow-1 d-inline-flex align-items-center justify-content-center gap-2 py-2"
+                    onClick={handleSendViaWhatsApp}
+                    disabled={isSubmitting}
+                    className="btn-futuristic btn-futuristic-secondary flex-grow-1"
                   >
                     <MessageSquare size={16} />
                     <span>Send via WhatsApp</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleEmailSubmit}
-                    className="btn btn-outline-accent flex-grow-1 d-inline-flex align-items-center justify-content-center gap-2 py-2"
-                  >
-                    <Mail size={16} />
-                    <span>Send via Email</span>
                   </button>
                 </div>
               </form>
@@ -325,4 +496,5 @@ export const Contact: React.FC = () => {
     </section>
   );
 };
+
 export default Contact;
