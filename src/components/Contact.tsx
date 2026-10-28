@@ -172,17 +172,17 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
           </p>
         </div>
 
-        <div className="row g-5">
+        <div className="row g-3">
           {/* Direct Communication Channels */}
           <div className="col-lg-5">
             <motion.div
-              initial={{ opacity: 0, x: -24 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6 }}
-              className="d-flex flex-column gap-3"
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5 }}
+              className="d-flex flex-column gap-2"
             >
-              <div className="card-futuristic p-4">
+              <div className="card-futuristic p-3.5">
                 <span className="section-label mb-2">// Direct Channels</span>
                 <h3 className="h5 fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>
                   Verified Contact Information
@@ -302,21 +302,21 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
           {/* Structured Contact / Idea Submission Form */}
           <div className="col-lg-7">
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.6 }}
-              className="card-futuristic p-4 p-md-5"
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5 }}
+              className="card-futuristic p-3.5 p-md-4"
             >
-              <div className="d-flex align-items-center justify-content-between mb-3">
+              <div className="d-flex align-items-center justify-content-between mb-2">
                 <span className="section-label mb-0">// Structured Inquiry</span>
-                <span className="small text-muted font-monospace" style={{ fontSize: '0.74rem' }}>Direct Email &amp; WhatsApp Integration</span>
+                <span className="small text-muted font-monospace" style={{ fontSize: '0.72rem' }}>Direct Email &amp; WhatsApp Integration</span>
               </div>
 
-              <h3 className="h5 fw-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <h3 className="h6 fw-bold mb-1" style={{ color: 'var(--text-primary)', fontSize: '1.05rem' }}>
                 Send A Message or Pitch an Idea
               </h3>
-              <p className="small text-muted mb-4">
+              <p className="small text-muted mb-3" style={{ fontSize: '0.86rem' }}>
                 Submissions automatically format a complete inquiry package that you can send directly via pre-filled email or instant WhatsApp.
               </p>
 

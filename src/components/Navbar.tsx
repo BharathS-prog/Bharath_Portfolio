@@ -80,6 +80,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
               height: '36px',
               borderRadius: '50%',
               objectFit: 'cover',
+              objectPosition: 'center 15%',
               border: '2px solid var(--accent-cyan)'
             }} 
           />
