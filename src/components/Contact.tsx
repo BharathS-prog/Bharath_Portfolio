@@ -172,17 +172,17 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
           </p>
         </div>
 
-        <div className="row g-3">
+        <div className="row g-5">
           {/* Direct Communication Channels */}
           <div className="col-lg-5">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5 }}
-              className="d-flex flex-column gap-2"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6 }}
+              className="d-flex flex-column gap-3"
             >
-              <div className="card-futuristic p-3.5">
+              <div className="card-futuristic p-4">
                 <span className="section-label mb-2">// Direct Channels</span>
                 <h3 className="h5 fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>
                   Verified Contact Information
@@ -208,7 +208,7 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
                       <Mail size={18} />
                     </div>
                     <div className="overflow-hidden">
-                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>DIRECT EMAIL</div>
+                      <div className="font-monospace small" style={{ fontSize: '0.74rem', color: '#38bdf8', fontWeight: 600 }}>DIRECT EMAIL</div>
                       <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
                         {profileInfo.email}
                       </div>
@@ -233,7 +233,7 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
                       <MessageSquare size={18} />
                     </div>
                     <div className="overflow-hidden">
-                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>PHONE / WHATSAPP</div>
+                      <div className="font-monospace small" style={{ fontSize: '0.74rem', color: '#34d399', fontWeight: 600 }}>PHONE / WHATSAPP</div>
                       <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
                         {profileInfo.phone}
                       </div>
@@ -258,7 +258,7 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
                       <LinkedinIcon size={18} />
                     </div>
                     <div className="overflow-hidden">
-                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>LINKEDIN PROFILE</div>
+                      <div className="font-monospace small" style={{ fontSize: '0.74rem', color: '#60a5fa', fontWeight: 600 }}>LINKEDIN PROFILE</div>
                       <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
                         {profileInfo.linkedIn}
                       </div>
@@ -283,7 +283,7 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
                       <GithubIcon size={18} />
                     </div>
                     <div className="overflow-hidden">
-                      <div className="font-monospace text-muted small" style={{ fontSize: '0.74rem' }}>GITHUB REPOSITORIES</div>
+                      <div className="font-monospace small" style={{ fontSize: '0.74rem', color: '#c084fc', fontWeight: 600 }}>GITHUB REPOSITORIES</div>
                       <div className="fw-semibold text-truncate" style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>
                         {profileInfo.github}
                       </div>
@@ -293,7 +293,7 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
 
                 <div className="d-flex align-items-center gap-2 mt-4 pt-3 border-top" style={{ borderColor: 'var(--border-subtle) !important' }}>
                   <MapPin size={16} style={{ color: 'var(--accent-cyan)' }} />
-                  <span className="small text-muted">{profileInfo.location}</span>
+                  <span className="small" style={{ color: '#cbd5e1' }}>{profileInfo.location}</span>
                 </div>
               </div>
             </motion.div>
@@ -302,21 +302,21 @@ export const Contact: React.FC<ContactProps> = ({ initialReason }) => {
           {/* Structured Contact / Idea Submission Form */}
           <div className="col-lg-7">
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 24 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5 }}
-              className="card-futuristic p-3.5 p-md-4"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6 }}
+              className="card-futuristic p-4 p-md-5"
             >
-              <div className="d-flex align-items-center justify-content-between mb-2">
+              <div className="d-flex align-items-center justify-content-between mb-3">
                 <span className="section-label mb-0">// Structured Inquiry</span>
-                <span className="small text-muted font-monospace" style={{ fontSize: '0.72rem' }}>Direct Email &amp; WhatsApp Integration</span>
+                <span className="small font-monospace" style={{ fontSize: '0.74rem', color: '#cbd5e1' }}>Direct Email &amp; WhatsApp Integration</span>
               </div>
 
-              <h3 className="h6 fw-bold mb-1" style={{ color: 'var(--text-primary)', fontSize: '1.05rem' }}>
+              <h3 className="h5 fw-bold mb-2" style={{ color: 'var(--text-primary)' }}>
                 Send A Message or Pitch an Idea
               </h3>
-              <p className="small text-muted mb-3" style={{ fontSize: '0.86rem' }}>
+              <p className="small mb-4" style={{ color: '#e2e8f0' }}>
                 Submissions automatically format a complete inquiry package that you can send directly via pre-filled email or instant WhatsApp.
               </p>
 

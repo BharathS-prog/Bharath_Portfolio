@@ -10,6 +10,7 @@ import { CareerReadiness } from './components/CareerReadiness';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
+import { FuturisticBackground3D } from './components/FuturisticBackground3D';
 
 const App: React.FC = () => {
   const [contactReason, setContactReason] = useState<string>('Startup Mentorship');
@@ -19,12 +20,15 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app-container">
+    <div className="app-container position-relative">
+      {/* 3D Motion Animated Futuristic AI Background */}
+      <FuturisticBackground3D />
+
       {/* Top Sticky Navigation */}
       <Navbar onSelectContactReason={handleSelectContactReason} />
 
       {/* Main Content Sections */}
-      <main id="main-content">
+      <main id="main-content" style={{ position: 'relative', zIndex: 1 }}>
         {/* Section 0: Hero & Personal Identity */}
         <Hero />
 

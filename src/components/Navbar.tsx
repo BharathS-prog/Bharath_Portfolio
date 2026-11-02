@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { profileInfo } from '../data';
-import heroImg from '../assets/hero.png';
+import profileImg from '../assets/profile.png';
 
 interface NavbarProps {
   onSelectContactReason?: (reason: string) => void;
@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
     setIsOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80;
+      const offset = 110;
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
         top: elementPosition - offset,
@@ -73,14 +73,13 @@ export const Navbar: React.FC<NavbarProps> = () => {
           aria-label={`${profileInfo.name} - Home`}
         >
           <img 
-            src={heroImg} 
+            src={profileImg} 
             alt="Bharath portrait icon" 
             style={{
               width: '36px',
               height: '36px',
               borderRadius: '50%',
               objectFit: 'cover',
-              objectPosition: 'center 15%',
               border: '2px solid var(--accent-cyan)'
             }} 
           />

@@ -123,9 +123,9 @@ export const Footer: React.FC = () => {
                   onClick={() => handleNavClick(link.id)}
                   className="btn btn-link p-0 text-decoration-none small"
                   style={{
-                    color: 'var(--text-muted)',
-                    fontSize: '0.82rem',
-                    margin: '0 6px',
+                    color: '#cbd5e1',
+                    fontSize: '0.84rem',
+                    margin: '0 8px',
                   }}
                 >
                   {link.label}
@@ -137,11 +137,11 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar: Copyright & Transparency */}
         <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pt-4">
-          <div className="small font-monospace" style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+          <div className="small font-monospace" style={{ color: '#cbd5e1', fontSize: '0.82rem' }}>
             &copy; {new Date().getFullYear()} {profileInfo.name} &bull; AI Engineer in Progress &amp; Emerging Entrepreneur
           </div>
 
-          <div className="small font-monospace d-flex align-items-center gap-1" style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+          <div className="small font-monospace d-flex align-items-center gap-1" style={{ color: '#cbd5e1', fontSize: '0.82rem' }}>
             <span>Crafted with React 19, TypeScript &amp; Framer Motion</span>
           </div>
         </div>

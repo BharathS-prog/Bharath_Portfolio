@@ -37,7 +37,7 @@ export interface SkillCategoryGroup {
   skills: CategorizedSkill[];
 }
 
-export type ProjectStatus = 'Prototype' | 'In Development' | 'Research / Exploration' | 'Completed Project';
+export type ProjectStatus = 'Completed' | 'In Development' | 'Prototype' | 'Research / Exploration' | 'Completed Project';
 
 export interface Project {
   title: string;
@@ -187,7 +187,7 @@ export const projectList: Project[] = [
   },
   {
     title: "NeuroSign v2.0",
-    status: "Prototype",
+    status: "Completed",
     problem: "Communication barriers between individuals using sign language and people unfamiliar with ASL gestures.",
     description: "A real-time American Sign Language (ASL) translation system utilizing computer vision and deep learning. Captures hand gestures via webcam, identifies characters and signs, and converts them into spoken audio through offline text-to-speech synthesis.",
     techStack: ["Python", "Flask", "TensorFlow", "OpenCV", "pyttsx3"],
@@ -195,17 +195,8 @@ export const projectList: Project[] = [
     githubUrl: "https://github.com/BharathS-prog"
   },
   {
-    title: "Zero to Hero",
-    status: "Prototype",
-    problem: "Beginner developers often struggle with passive video tutorials that lack interactive guidance and instant feedback.",
-    description: "An interactive, AI-driven learning portal designed for students starting their coding journey. Features an intelligent LLM tutor that breaks down programming questions, assesses milestone answers, and reinforces concepts with mobile-verified sign-in.",
-    techStack: ["React.js", "TypeScript", "Claude API", "Node.js", "Firebase Auth"],
-    keyLearnings: "Designing structured prompt templates for pedagogical feedback and building responsive interactive quiz interfaces.",
-    githubUrl: "https://github.com/BharathS-prog"
-  },
-  {
     title: "FuelGuard AI",
-    status: "Research / Exploration",
+    status: "In Development",
     problem: "Undetected fuel pilferage, unexpected drainage, and hazardous tank fluctuations in transport and generator operations.",
     description: "An IoT and software telemetry concept exploring ultrasonic/liquid sensor integration with statistical anomaly detection algorithms to monitor tank levels in real time and alert operators to rapid irregular drain rates.",
     techStack: ["Python", "IoT Sensors", "Data Modeling", "Streamlit"],
